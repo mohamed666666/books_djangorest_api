@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render ,get_object_or_404
 from .models import Books ,Pages
 # Create your views here.
 from .serializers import bookSerlizer , pageSerlizer
@@ -34,10 +34,12 @@ def pages(request, format=None):
     """
     List all code snippets, or create a new snippet.
     """
+    
     if request.method == 'GET':
         pags = Pages.objects.all()
         serializer = pageSerlizer(pags, many=True)
         return Response(serializer.data)
+    
 
     elif request.method == 'POST':
         serializer = pageSerlizer(data=request.data)
@@ -45,3 +47,14 @@ def pages(request, format=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+@api_view(['GET', 'POST'])
+def getpage(request, format=None,id=None):
+    books=get_object_or_404(Books,pk=id)
+    pages=Pages.objects.filter(book=books)
+    serializer = pageSerlizer(pages, many=True)
+    return Response(serializer.data)
+

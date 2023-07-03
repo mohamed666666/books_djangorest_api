@@ -6,5 +6,7 @@ app_name="books"
 
 urlpatterns = [
      path('books/', views.snippet_list),
-     path('pages/',views.pages)
+     path('pages/',views.pages),
+     path('books/<int:id>/',views.getpage)
+
 ]
